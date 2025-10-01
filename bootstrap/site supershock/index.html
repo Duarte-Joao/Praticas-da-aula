@@ -11,13 +11,25 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="css/styles.css" />
+    <script src="js/menu.js"></script>
   </head>
   <body>
     <!--Menu de Navegação-->
+
+    <div id="menu-lateral" class="menu-lateral">
+      <ul class="menu-itens">
+        <li><a href="#inicio">Ínicio</a></li>
+        <li><a href="#historia">História</a></li>
+        <li><a href="#personagem">Personagens</a></li>
+        <li><a href="#curiosidade">Curiosidads</a></li>
+        <li><a href="#poderes">Poderes</a></li>
+      </ul>
+    </div>
     <nav class="navbar nabar-dark bg-primary fixed-top">
         <div class="container">
             <button class="btn-menu" onclick="mostrarMenu()">
                 <img 
+                id="img-menu"
                 src="img/icon-hamburger-menu.png" 
                 width="28"
                 height="28"
