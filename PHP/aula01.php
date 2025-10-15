@@ -8,7 +8,16 @@
 </head>
 <body>
     <?php
-        echo "Hello World em PHP"
+        $nome = "João Duarte";
+        $idade = 18;
+
+        echo "Hello World em PHP $nome Idade: $idade";
+
+        if($idade >= 18){
+            echo "Você é maior de idade";
+        }else{
+            echo "Você é beta";
+        }
     ?>
 </body>
 </html>
