@@ -1,5 +1,15 @@
 <?php
-include '../header.php'
+include '../header.php';
+include '../db.class.php';
+
+$db = new db();
+$db->store([
+    "nome" => "João",
+    "telefone" => "49 998349066",
+    "cpf" => "09530898940",
+    "email" => "teste@gmail.com"
+]);
+
 ?>
 
 <h3>Formulário do Usuário</h3>
