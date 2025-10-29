@@ -2,13 +2,37 @@
 include '../header.php';
 include '../db.class.php';
 
-$db = new db();
-$db->store([
-    "nome" => "João",
-    "telefone" => "49 998349066",
-    "cpf" => "09530898940",
-    "email" => "teste@gmail.com"
-]);
+if (!empty($_POST)) {
+    try {
+        $db = new db();
+        if (empty($_POST['nome'])) {
+            $errors[] = throw 'O nome é obrigatório';
+        }
+        if (empty($_POST['telefone'])) {
+            $errors[] = throw 'O telefone é obrigatório';
+        }
+        if (empty($_POST['cpf'])) {
+            $errors[] = throw 'O cpf é obrigatório';
+        }
+
+        $db->store([
+            "nome" => $_POST['nome'],
+            "telefone" => $_POST['telefone'],
+            "cpf" => $_POST['cpf'],
+            "email" => $_POST['email']
+        ]);
+        echo "Registro Salvo com sucesso!";
+
+        echo "<script>
+        setTimeout(
+            ()=> window.Location.href = 'usuarioList.php', 2000
+        );
+    </script>";
+    } catch (Exception $e) {
+        var_dump($e->getMessage());
+    }
+}
+
 
 ?>
 
@@ -17,49 +41,49 @@ $db->store([
     <div class="row">
         <div class="col-6">
             <label for="" class="form-label">Nome</label>
-            <input class="form-contro" type="text" name="nome">
+            <input class="form-control" type="text" name="nome">
         </div>
         <div class="col-6">
             <label for="" class="form-label">Email</label>
-            <input class="form-contro" type="text" name="email">
+            <input class="form-control" type="text" name="email">
         </div>
     </div>
 
     <div class="row">
         <div class="col">
             <label for="" class="form-label">CPF</label>
-            <input class="form-contro" type="text" name="cpf">
+            <input class="form-control" type="text" name="cpf">
         </div>
         <div class="col">
             <label for="" class="form-label">Telefone</label>
-            <input class="form-contro" type="text" name="telefone">
+            <input class="form-control" type="text" name="telefone">
         </div>
     </div>
 
     <div class="row">
         <div class="col">
             <label for="" class="form-label">Login</label>
-            <input class="form-contro" type="text" name="login">
+            <input class="form-control" type="text" name="login">
         </div>
         <div class="col">
             <label for="" class="form-label">Senha</label>
-            <input class="form-contro" type="text" name="senha">
+            <input class="form-control" type="text" name="senha">
         </div>
         <div class="col">
             <label for="" class="form-label">Confirmar Senha</label>
-            <input class="form-contro" type="text" name="c_senha">
+            <input class="form-control" type="text" name="c_senha">
         </div>
     </div>
 
-    <div class="ro">
+    <div class="row">
         <div class="col mt-4">
-            <button type="submit">Salvar</button>
-            <a href="./usuarioList.php">Voltar</a>
+            <button type="submit" class="btn btn-success">Salvar</button>
+            <a href="./usuarioList.php" class="btn btn-primary">Voltar</a>
         </div>
     </div>
     </div>
 </form>
 
 <?php
-include '../footer.php'
+include '../footer.php';
 ?>

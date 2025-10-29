@@ -1,15 +1,17 @@
 <?php
-class db {
+class db
+{
 
     private $host = "localhost";
     private $user = "root";
     private $password = "";
     private $port = "3306";
-    private $dbname ="db_pwebduarte_2025.2";
+    private $dbname = "db_pwebduarte_2025.2";
 
-    function conn(){
+    function conn()
+    {
 
-        try{
+        try {
             $conn = new PDO(
                 "mysql:host=$this->host;dbname=$this->dbname;port=$this->port",
                 $this->user,
@@ -17,32 +19,41 @@ class db {
                 [
                     PDO::ATTR_ERRMODE,
                     PDO::ERRMODE_EXCEPTION,
-                    PDO::MYSQL_ATTR_INIT_COMMAND =>" SET NAMES utf8"
+                    PDO::MYSQL_ATTR_INIT_COMMAND => " SET NAMES utf8"
                 ]
             );
 
             return $conn;
-
-        } catch(PDOException $e){
-            echo "Erro: ". $e->getMessage();
+        } catch (PDOException $e) {
+            echo "Erro: " . $e->getMessage();
         }
     }
 
-    public function store($dados){
-        
+    public function store($dados)
+    {
+
         $conn = $this->conn();
-        
-        $sql = "INSERT INTO `db_pwebduarte_2025.2`.`aluno` (`nome`, `telefone`, `cpf`, `email`) 
-            VALUES ('?', '?', '?', '?');";
+
+        $sql = "INSERT INTO `usuario` (`nome`, `telefone`, `cpf`, `email`) 
+            VALUES (?, ?, ?, ?);";
 
         $st = $conn->prepare($sql); //$st = statement
         $st->execute([
-        $dados['nome'],
-        $dados['telefone'],
-        $dados['cpf'],
-        $dados['email']
+            $dados['nome'],
+            $dados['telefone'],
+            $dados['cpf'],
+            $dados['email']
         ]);
     }
 
+    public function all(){
+
+        $conn = $this->conn();
+        $sql = "SELECT * FROM usuario";
+
+        $st = $conn->prepare($sql);
+        $st->execute();
+
+        return $st->fetchAll(PDO::FETCH_CLASS);
+    }
 }
-?>
