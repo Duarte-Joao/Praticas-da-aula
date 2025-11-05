@@ -2,9 +2,11 @@
 include '../header.php';
 include '../db.class.php';
 
+$db = new db();
+$data = null;
+
 if (!empty($_POST)) {
     try {
-        $db = new db();
         if (empty($_POST['nome'])) {
             $errors[] = throw 'O nome é obrigatório';
         }
@@ -15,17 +17,30 @@ if (!empty($_POST)) {
             $errors[] = throw 'O cpf é obrigatório';
         }
 
-        $db->store([
-            "nome" => $_POST['nome'],
-            "telefone" => $_POST['telefone'],
-            "cpf" => $_POST['cpf'],
-            "email" => $_POST['email']
-        ]);
-        echo "Registro Salvo com sucesso!";
+        if (empty($_POST['id'])) {
+            $db->store([
+                "nome" => $_POST['nome'],
+                "telefone" => $_POST['telefone'],
+                "cpf" => $_POST['cpf'],
+                "email" => $_POST['email']
+            ]);
+            echo "Registro Salvo com sucesso!";
+        } else {
+            $db->update([
+                "id" => $_POST['id'],
+                "nome" => $_POST['nome'],
+                "telefone" => $_POST['telefone'],
+                "cpf" => $_POST['cpf'],
+                "email" => $_POST['email']
+            ]);
+
+            echo "Registro Atualizado com sucesso!";
+        }
+
 
         echo "<script>
         setTimeout(
-            ()=> window.Location.href = 'usuarioList.php', 2000
+            ()=> window.location.href = 'usuarioList.php', 2000
         );
     </script>";
     } catch (Exception $e) {
@@ -33,30 +48,37 @@ if (!empty($_POST)) {
     }
 }
 
+if (!empty($_GET['id'])) {
+    $data = $db->find($_GET['id']);
+    //var_dump($data);
+    //exit;
+}
 
 ?>
 
 <h3>Formulário do Usuário</h3>
 <form action="" method="post">
+    <input type="hidden" name="id" value="<?= $data->id ?? '' ?>">
+
     <div class="row">
         <div class="col-6">
             <label for="" class="form-label">Nome</label>
-            <input class="form-control" type="text" name="nome">
+            <input class="form-control" type="text" name="nome" value="<?= $data->nome ?? '' ?>"> <!-- <.?= é iguala a o echo-->
         </div>
         <div class="col-6">
             <label for="" class="form-label">Email</label>
-            <input class="form-control" type="text" name="email">
+            <input class="form-control" type="text" name="email" value="<?= $data->email ?? '' ?>">
         </div>
     </div>
 
     <div class="row">
         <div class="col">
             <label for="" class="form-label">CPF</label>
-            <input class="form-control" type="text" name="cpf">
+            <input class="form-control" type="text" name="cpf" value="<?= $data->cpf ?? '' ?>">
         </div>
         <div class="col">
             <label for="" class="form-label">Telefone</label>
-            <input class="form-control" type="text" name="telefone">
+            <input class="form-control" type="text" name="telefone" value="<?= $data->telefone ?? '' ?>">
         </div>
     </div>
 
