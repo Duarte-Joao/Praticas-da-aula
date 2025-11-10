@@ -3,6 +3,7 @@ include '../header.php';
 include '../db.class.php';
 
 $db = new db();
+$db->checkLogin();
 
 //var_dump($dados);
 //exit;

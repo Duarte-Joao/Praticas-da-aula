@@ -7,34 +7,38 @@ $data = null;
 
 if (!empty($_POST)) {
     try {
+
+        $db = new db();
+        $errors = [];
+        
         if (empty($_POST['nome'])) {
             $errors[] = throw 'O nome é obrigatório';
         }
+
         if (empty($_POST['telefone'])) {
             $errors[] = throw 'O telefone é obrigatório';
         }
+
         if (empty($_POST['cpf'])) {
             $errors[] = throw 'O cpf é obrigatório';
         }
 
         if (empty($_POST['id'])) {
-            $db->store([
-                "nome" => $_POST['nome'],
-                "telefone" => $_POST['telefone'],
-                "cpf" => $_POST['cpf'],
-                "email" => $_POST['email']
-            ]);
-            echo "Registro Salvo com sucesso!";
-        } else {
-            $db->update([
-                "id" => $_POST['id'],
-                "nome" => $_POST['nome'],
-                "telefone" => $_POST['telefone'],
-                "cpf" => $_POST['cpf'],
-                "email" => $_POST['email']
-            ]);
+            if($_POST['senha'] === $_POST['c_senha']){
+                $_POST['senha'] = password_hash(
+                    $_POST['senha'],
+                    PASSWORD_BCRYPT
+                );
+                
+                $db->store($_POST);
+                echo "Registro Salvo com sucesso!";
+     
+            }
 
+        } else {
+            $db->update($_POST);
             echo "Registro Atualizado com sucesso!";
+    
         }
 
 
@@ -44,7 +48,8 @@ if (!empty($_POST)) {
         );
     </script>";
     } catch (Exception $e) {
-        var_dump($e->getMessage());
+        var_dump($errors, $e->getMessage());
+        exit;
     }
 }
 
@@ -89,11 +94,11 @@ if (!empty($_GET['id'])) {
         </div>
         <div class="col">
             <label for="" class="form-label">Senha</label>
-            <input class="form-control" type="text" name="senha">
+            <input class="form-control" type="password" name="senha">
         </div>
         <div class="col">
             <label for="" class="form-label">Confirmar Senha</label>
-            <input class="form-control" type="text" name="c_senha">
+            <input class="form-control" type="password" name="c_senha">
         </div>
     </div>
 

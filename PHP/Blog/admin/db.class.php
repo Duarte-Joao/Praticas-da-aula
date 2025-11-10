@@ -6,8 +6,14 @@ class db
     private $user = "root";
     private $password = "";
     private $port = "3306";
-    private $dbname = "db_pwebduarte_2025.2";
+    private $dbname = "db_pweb1_2025_2";
+    private $table_name;
 
+
+    /*public function __construct($table_name){
+        $this->table_name = $table_name;
+    }
+*/
     function conn()
     {
 
@@ -34,15 +40,17 @@ class db
 
         $conn = $this->conn();
 
-        $sql = "INSERT INTO `usuario` (`nome`, `telefone`, `cpf`, `email`) 
-            VALUES (?, ?, ?, ?);";
+        $sql = "INSERT INTO `usuario` (`nome`, `telefone`, `cpf`, `email`, `login`, `senha`) 
+            VALUES (?, ?, ?, ?, ?, ?);";
 
-        $st = $conn->prepare($sql); //$st = statement
+        $st = $conn->prepare($sql);
         $st->execute([
             $dados['nome'],
             $dados['telefone'],
             $dados['cpf'],
-            $dados['email']
+            $dados['email'],
+            $dados['login'],
+            $dados['senha']
         ]);
     }
 
@@ -110,4 +118,35 @@ class db
 
         return $st->fetchAll(PDO::FETCH_CLASS);
     }
+
+    public function login($dados)
+{
+    $conn - $this->conn();
+
+    $sql = 'SELCT * FROM usuario WHERE login = ?';
+    
+    $st = $conn->prepare($sql);
+    $st->execute([$dados['login']]);
+
+    $result = $st->fetchObject();
+
+    if(password_verify($dados['senha'], $result->senha)){
+        return $result;
+    } else{
+        return 'error';
+    }
+
 }
+
+public function checkLogin()
+{
+    session_start();
+
+    if(empty($_SESSION['login'])){
+        session_destroy();
+        header('Location: ../login.php?error=Sessão Expirada!'); //direcionando o usuario para a pagina de login de volta
+
+    }
+}
+}
+
