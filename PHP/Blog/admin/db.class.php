@@ -10,10 +10,11 @@ class db
     private $table_name;
 
 
-    /*public function __construct($table_name){
+    public function __construct($table_name)
+    {
         $this->table_name = $table_name;
     }
-*/
+
     function conn()
     {
 
@@ -39,42 +40,70 @@ class db
     {
 
         $conn = $this->conn();
+        $flag = 0;
+        $arrayDados = [];
 
-        $sql = "INSERT INTO `usuario` (`nome`, `telefone`, `cpf`, `email`, `login`, `senha`) 
-            VALUES (?, ?, ?, ?, ?, ?);";
+
+        $sql = "INSERT INTO $this->table_name ("; //ISSO AQUI É PARA CONCATENAR OS CAMPOS O SQL E E TORNAR A INSERÇÃO GENERICA
+        
+        foreach($dados as $campo => $valor){
+            if($flag == 0){
+                $sql .= "$campo";                     // .= é para concatenar
+            }else{
+                $sql .=", $campo";
+            }
+            $flag = 1;
+        }
+
+        $sql .= ") VALUES (";
+
+        $flag = 0;
+        foreach($dados as $campo => $valor){    //ISSO AQUI É PARA CONCATENAR OS VALORERS DA TABELA
+            if($flag == 0){
+                $sql .= " ? ";                     // .= é para concatenar
+            }else{
+                $sql .= " ? ";
+            }
+            $flag =1;
+            $arrayDados[] = $valor;
+        }
+
+        $sql .= "); ";                                  //ATÉ AQUI!!!!!!
 
         $st = $conn->prepare($sql);
-        $st->execute([
-            $dados['nome'],
-            $dados['telefone'],
-            $dados['cpf'],
-            $dados['email'],
-            $dados['login'],
-            $dados['senha']
-        ]);
+        $st->execute($arrayDados);
     }
 
     public function update($dados)
     {
         $id = $dados['id'];
         $conn = $this->conn();
+        $flag = 0;
+        $arrayDados = [];
 
-        $sql = "UPDATE `usuario` SET `nome`=?, `telefone`=?, `cpf`=?, `email`=? 
-            WHERE id = $id";
+        $sql = "UPDATE `$this->table_name` SET ";
+
+        foreach($dados as $campo => $valor){
+            if($flag ==0){
+                $sql .= "$campo = ? ";
+            }else{
+                $sql .= ", $campo = ? ";
+            }
+            $flag = 1;
+            $arrayDados = $valor;
+        }
+
+        $sql .= " WHERE id = $id ";
+
 
         $st = $conn->prepare($sql); //$st = statement
-        $st->execute([
-            $dados['nome'],
-            $dados['telefone'],
-            $dados['cpf'],
-            $dados['email']
-        ]);
+        $st->execute($arrayDados);
     }
 
     public function all(){
 
         $conn = $this->conn();
-        $sql = "SELECT * FROM usuario";
+        $sql = "SELECT * FROM $this->table_name";
 
         $st = $conn->prepare($sql);
         $st->execute();
@@ -87,7 +116,7 @@ class db
         //slect 8 from usuario where id =5 --> exemplo
 
         $conn = $this->conn();
-        $sql = "SELECT * FROM usuario WHERE id = ?";
+        $sql = "SELECT * FROM $this->table_name WHERE id = ?";
 
         $st = $conn->prepare($sql);
         $st->execute([$id]);
@@ -98,7 +127,7 @@ class db
     public function destroy($id){
 
         $conn = $this->conn();
-        $sql = "DELETE FROM usuario WHERE id = ?";
+        $sql = "DELETE FROM $this->table_name WHERE id = ?";
 
         $st = $conn->prepare($sql);
         $st->execute([$id]);
@@ -111,7 +140,7 @@ class db
         $valor = $dados['valor'];
 
         $conn = $this->conn();
-        $sql = "SELECT * FROM usuario WHERE $campo LIKE ?";
+        $sql = "SELECT * FROM $this->table_name WHERE $campo LIKE ?";
 
         $st = $conn->prepare($sql);
         $st->execute(["%$valor%"]);
@@ -123,7 +152,7 @@ class db
 {
     $conn - $this->conn();
 
-    $sql = 'SELCT * FROM usuario WHERE login = ?';
+    $sql = 'SELCT * FROM $this->table_name WHERE login = ?';
     
     $st = $conn->prepare($sql);
     $st->execute([$dados['login']]);

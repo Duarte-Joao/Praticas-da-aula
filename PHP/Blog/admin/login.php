@@ -2,12 +2,11 @@
 include './header.php';
 include './db.class.php';
 
-$db = new db();
+$db = new db('usuario');
 $data = null;
 
 if (!empty($_POST)) {
     try {
-        $db = new db();
         $errors = [];
 
         if (empty($_POST['login'])) {
@@ -26,6 +25,7 @@ if (!empty($_POST)) {
 
                 $_SESSION['login'] = $result->login;
                 $_SESSION['nome'] = $result->nome;
+                $_SESSION['usuario_id'] = $rsult->id;
 
                 echo "Login realizado com sucesso!";
                 echo "<scrip>

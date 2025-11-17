@@ -13,7 +13,7 @@
           <a class="nav-link" href="./usuario/usuarioList.php">Usuário</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Post</a>
+          <a class="nav-link" href="./post/postList.php">Post</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Categoria</a>
